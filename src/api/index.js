@@ -10,7 +10,7 @@ export default {
       .then(res => res.data)
   },
   getPost (params) {
-    return axios.get('/post/' + params)
+    return axios.get('/posts/' + params)
       .then(res => res.data)
   }
 }

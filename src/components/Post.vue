@@ -1,13 +1,14 @@
 <template>
   <div class="columns">
     <div class="column is-offset-2 is-8">
-      <div class="content" v-html="getPostDetails.content"></div>
+      <hr>
+      <div class="content" v-html="postContent"></div>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  import { mapGetters } from 'vuex'
   import marked from 'marked'
   import 'highlight.js/styles/github-gist.css'
 
@@ -16,23 +17,22 @@
       return require('highlight.js').highlightAuto(code).value
     }
   })
+
   export default {
     name: 'PostDetails',
     computed: {
-      ...mapGetters({
-        getPostDetails: 'getPostDetails'
-      })
+      ...mapGetters(['getPostDetails']),
+      postContent () {
+        return this.getPostDetails.content ? marked(this.getPostDetails.content) : ''
+      }
     },
     created () {
       this.loadPostDetails()
     },
     methods: {
-      ...mapActions({
-        postDetails: 'postDetails'
-      }),
       loadPostDetails () {
         let slug = this.$route.params.slug
-        this.postDetails(slug)
+        this.$store.dispatch('postDetails', slug)
       }
     },
     destroyed () {

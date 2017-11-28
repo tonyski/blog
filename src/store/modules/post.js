@@ -2,8 +2,9 @@ import api from '../../api'
 
 const state = {
   posts: {
-    pagination: {},
-    list: []
+    data: [],
+    links: {},
+    meta: {}
   },
 
   fetch: false,
@@ -41,7 +42,14 @@ const actions = {
     const res = await api.getPostList(data)
       .catch(err => console.error(err))
     if (res) {
-      commit('SET_POST_SUCCESS', res)
+      let list
+      if (res.meta.current_page === 1) list = res.data
+      else list = [...state.posts.data, ...res.data]
+      commit('SET_POST_SUCCESS', {
+        data: list,
+        links: res.links,
+        meta: res.meta
+      })
     } else commit('SET_POST_FAIL')
   },
   async postDetails ({commit}, data) {
@@ -57,6 +65,9 @@ const getters = {
   },
   getPostDetails: state => {
     return state.details
+  },
+  isFetch: state => {
+    return state.fetch
   }
 }
 
