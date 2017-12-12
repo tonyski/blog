@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Main from '@/components/Main'
-import Post from '@/components/Post'
 
 Vue.use(Router)
+
+const Main = resolve => require(['../components/Main'], resolve)
+const Post = resolve => require(['../components/Post'], resolve)
 
 export default new Router({
   mode: 'history',
